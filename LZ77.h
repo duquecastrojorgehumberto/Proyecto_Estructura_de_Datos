@@ -5,7 +5,7 @@ typedef struct {
     unsigned short offset;
     unsigned short length;
     char nextChar;
-} TuplaLZ77;
+} __attribute__((packed)) TuplaLZ77;
 
 TuplaLZ77 buscarCoincidencia(const char* texto, int posActual, int tamVentanaBusqueda, int longitudTexto);
 char* descomprimirLZ77(TuplaLZ77* comprimido, int numTuplas, int* tamanoFinal);

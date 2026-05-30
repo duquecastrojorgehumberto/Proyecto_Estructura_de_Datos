@@ -21,7 +21,7 @@ int main() {
     int opcion = 0;
     while (opcion != 5) {
         printf("\n============================================\n");
-        printf("   SISTEMA DE COMPRESION UTP - FINAL\n");
+        printf("    SISTEMA DE COMPRESION UTP - FINAL\n");
         printf("============================================\n");
         printf("1. LZ77: Comprimir (.txt -> .bin)\n");
         printf("2. Huffman: Comprimir (.txt -> .bin)\n");
@@ -60,29 +60,31 @@ char* leerArchivo(char* nombre, long* tamano) {
 void ejecutarCompresionLZ77() {
     long tam; char nomIn[100], nomOut[100];
     printf("Archivo .txt: "); scanf("%s", nomIn);
-    char* texto = leerArchivo(nomIn, &tam); if(!texto) return;
+    char* texto = leerArchivo(nomIn, &tam); if(texto == NULL) return;
     printf("Nombre para el .bin: "); scanf("%s", nomOut);
 
     clock_t inicio = clock();
-    int cap = 1000, nT = 0, i = 0;
-    TuplaLZ77 *tups = malloc(sizeof(TuplaLZ77) * cap);
+    int capacidad = 1000, numTuplas = 0, i = 0;
+    TuplaLZ77 *tups = malloc(sizeof(TuplaLZ77) * capacidad);
     while (i < tam) {
-        if (nT >= cap) { cap *= 2; tups = realloc(tups, sizeof(TuplaLZ77) * cap); }
-        tups[nT] = buscarCoincidencia(texto, i, 1024, (int)tam);
-        i += tups[nT].length + 1; nT++;
+        if (numTuplas >= capacidad) { capacidad *= 2; tups = realloc(tups, sizeof(TuplaLZ77) * capacidad); }
+        tups[numTuplas] = buscarCoincidencia(texto, i, 1024, (int)tam);
+        i += tups[numTuplas].length + 1; numTuplas++;
     }
 
     FILE *f = fopen(nomOut, "wb");
     int modo = MODO_LZ77;
     fwrite(&modo, sizeof(int), 1, f);
-    fwrite(tups, sizeof(TuplaLZ77), nT, f);
+    fwrite(tups, sizeof(TuplaLZ77), numTuplas, f);
+    
+    long tamBin = ftell(f);
     fclose(f);
 
     clock_t fin = clock();
     double tMs = ((double)(fin - inicio)/CLOCKS_PER_SEC)*1000;
-    double ahorro = 100.0 - (((double)nT * sizeof(TuplaLZ77) / tam) * 100.0);
+    double ahorro = 100.0 - (((double)tamBin / tam) * 100.0);
     
-    printf("\n[LZ77] Tiempo: %.2f ms | Ahorro: %.2f%%\n", tMs, (ahorro<0)?0:ahorro);
+    printf("\n[LZ77] Tiempo: %.2f ms | Ahorro Real: %.2f%%\n", tMs, (ahorro<0)?0:ahorro);
     free(texto); free(tups);
 }
 
@@ -93,18 +95,32 @@ void ejecutarCompresionHuffman() {
     printf("Nombre para el .bin: "); scanf("%s", nomOut);
 
     clock_t inicio = clock();
+    
     int frecs[256] = {0};
     for(int j=0; j<tam; j++) frecs[(unsigned char)texto[j]]++;
-    construirArbolHuffman(frecs); // El árbol queda en la RAM de la instancia
+    construirArbolHuffman(frecs); 
+
+    NodoHuffman* raiz = generarArbolReal(frecs);
+    char codigos[256][100] = {""};
+    char codigoActual[100] = "";
+    if (raiz) generarCodigos(raiz, codigos, codigoActual, 0);
 
     FILE *f = fopen(nomOut, "wb");
     int modo = MODO_HUFFMAN;
+    
     fwrite(&modo, sizeof(int), 1, f);
-    fwrite(texto, 1, tam, f); // Por la "no persistencia", guardamos el texto plano simulando el bin
+    fwrite(frecs, sizeof(int), 256, f);
+    if (raiz) escribirBitsFisicos(texto, tam, codigos, f);
+    
+    long tamBin = ftell(f);
     fclose(f);
 
     clock_t fin = clock();
-    printf("\n[Huffman] Tiempo: %.2f ms | Ahorro Est: 30.59%%\n", ((double)(fin-inicio)/CLOCKS_PER_SEC)*1000);
+    double tMs = ((double)(fin-inicio)/CLOCKS_PER_SEC)*1000;
+    double ahorro = 100.0 - (((double)tamBin / tam) * 100.0);
+    printf("\n[Huffman] Tiempo: %.2f ms | Ahorro Real: %.2f%%\n", tMs, (ahorro<0)?0:ahorro);
+    
+    if(raiz) liberarArbol(raiz);
     free(texto);
 }
 
@@ -115,32 +131,55 @@ void ejecutarCompresionSistemaIntegrado() {
     printf("Nombre para el .bin: "); scanf("%s", nomOut);
 
     clock_t inicio = clock();
-    // 1. LZ77
-    int cap = 1000, nT = 0, i = 0;
-    TuplaLZ77 *tups = malloc(sizeof(TuplaLZ77) * cap);
+    
+    // 1. PASO 1: Ejecutar LZ77 Real
+    int capacidad = 1000, numTuplas = 0, i = 0;
+    TuplaLZ77 *tups = malloc(sizeof(TuplaLZ77) * capacidad);
     while (i < tam) {
-        if (nT >= cap) { cap *= 2; tups = realloc(tups, sizeof(TuplaLZ77) * cap); }
-        tups[nT] = buscarCoincidencia(texto, i, 1024, (int)tam);
-        i += tups[nT].length + 1; nT++;
+        if (numTuplas >= capacidad) { capacidad *= 2; tups = realloc(tups, sizeof(TuplaLZ77) * capacidad); }
+        tups[numTuplas] = buscarCoincidencia(texto, i, 1024, (int)tam);
+        i += tups[numTuplas].length + 1; numTuplas++;
     }
-    // 2. Huffman (en RAM)
+    
+    // 2. PASO 2: Tratar el bloque de tuplas como bytes puros y calcular frecuencias reales
+    long tamBytesTups = numTuplas * sizeof(TuplaLZ77);
+    unsigned char* bytesTups = (unsigned char*)tups;
+    
     int frecs[256] = {0};
-    for(int k=0; k<nT; k++) frecs[(unsigned char)tups[k].nextChar]++;
+    for(long k = 0; k < tamBytesTups; k++) {
+        frecs[bytesTups[k]]++;
+    }
     construirArbolHuffman(frecs);
+
+    // 3. PASO 3: Construir árbol de Huffman real para las tuplas
+    NodoHuffman* raiz = generarArbolReal(frecs);
+    char codigos[256][100] = {""};
+    char codigoActual[100] = "";
+    if (raiz) generarCodigos(raiz, codigos, codigoActual, 0);
 
     FILE *f = fopen(nomOut, "wb");
     int modo = MODO_INTEGRADO;
+    
+    // Guardar ID, Tabla de frecuencias híbrida y la cantidad de tuplas originales
     fwrite(&modo, sizeof(int), 1, f);
-    fwrite(tups, sizeof(TuplaLZ77), nT, f);
+    fwrite(&numTuplas, sizeof(int), 1, f); 
+    fwrite(frecs, sizeof(int), 256, f);
+    
+    // Comprimir físicamente los bytes de LZ77 usando los códigos de Huffman
+    if (raiz) escribirBitsFisicos((char*)bytesTups, tamBytesTups, codigos, f);
+
+    long tamBin = ftell(f);
     fclose(f);
 
     clock_t fin = clock();
-    double ahorro = 100.0 - (((nT * sizeof(TuplaLZ77) * 0.7) / tam) * 100.0);
-    printf("\n[SISTEMA INTEGRADO] Tiempo: %.2f ms | Ahorro: %.2f%%\n", ((double)(fin-inicio)/CLOCKS_PER_SEC)*1000, ahorro);
+    double tMs = ((double)(fin-inicio)/CLOCKS_PER_SEC)*1000;
+    double ahorro = 100.0 - (((double)tamBin / tam) * 100.0);
+    
+    printf("\n[SISTEMA INTEGRADO] Tiempo: %.2f ms | Ahorro Real: %.2f%%\n", tMs, (ahorro<0)?0:ahorro);
+    
+    if(raiz) liberarArbol(raiz);
     free(texto); free(tups);
 }
-
-// --- EXTRACCION INTELIGENTE (LA QUE PIDE EL PROFE) ---
 
 void ejecutarExtraccionGlobal() {
     char nomBin[100];
@@ -153,36 +192,74 @@ void ejecutarExtraccionGlobal() {
         return;
     }
 
-    // --- INICIO DE EVALUACIÓN DE DESEMPEÑO ---
     clock_t inicio = clock();
 
     int modo; 
     fread(&modo, sizeof(int), 1, f); // Leer ID de algoritmo
     
-    fseek(f, 0, SEEK_END); 
-    long tamCuerpo = ftell(f) - sizeof(int);
-    fseek(f, sizeof(int), SEEK_SET);
-
     char *txtFinal = NULL; 
     int tS = 0;
 
-    // Identificar algoritmo y extraer
-    if (modo == MODO_LZ77 || modo == MODO_INTEGRADO) {
-        int nT = tamCuerpo / sizeof(TuplaLZ77);
+    if (modo == MODO_LZ77) {
+        fseek(f, 0, SEEK_END); 
+        long tamCuerpo = ftell(f) - sizeof(int);
+        fseek(f, sizeof(int), SEEK_SET);
+
+        int numTuplas = tamCuerpo / sizeof(TuplaLZ77);
         TuplaLZ77 *leidas = malloc(tamCuerpo);
-        fread(leidas, sizeof(TuplaLZ77), nT, f);
-        txtFinal = descomprimirLZ77(leidas, nT, &tS);
+        fread(leidas, sizeof(TuplaLZ77), numTuplas, f);
+        txtFinal = descomprimirLZ77(leidas, numTuplas, &tS);
         free(leidas);
-    } else if (modo == MODO_HUFFMAN) {
-        txtFinal = malloc(tamCuerpo + 1);
-        fread(txtFinal, 1, tamCuerpo, f);
-        txtFinal[tamCuerpo] = '\0';
-        tS = tamCuerpo;
+        fclose(f);
+    } 
+    else if (modo == MODO_HUFFMAN) {
+        int frecsLeidas[256];
+        fread(frecsLeidas, sizeof(int), 256, f);
+
+        NodoHuffman* raizReconstruida = generarArbolReal(frecsLeidas);
+
+        long posActual = ftell(f);
+        fseek(f, 0, SEEK_END);
+        long tamCuerpoBits = ftell(f) - posActual;
+        fseek(f, posActual, SEEK_SET);
+
+        if (raizReconstruida) {
+            txtFinal = decodificarBitsFisicos(f, raizReconstruida, tamCuerpoBits, &tS);
+            liberarArbol(raizReconstruida);
+        }
+        fclose(f);
     }
-    fclose(f);
+    else if (modo == MODO_INTEGRADO) {
+        // --- EXTRAER DEL SISTEMA INTEGRADO REAL ---
+        int numTuplasOriginales;
+        fread(&numTuplasOriginales, sizeof(int), 1, f); // Leer cuántas tuplas eran
+        
+        int frecsLeidas[256];
+        fread(frecsLeidas, sizeof(int), 256, f); // Leer árbol híbrido
+
+        NodoHuffman* raizReconstruida = generarArbolReal(frecsLeidas);
+
+        long posActual = ftell(f);
+        fseek(f, 0, SEEK_END);
+        long tamCuerpoBits = ftell(f) - posActual;
+        fseek(f, posActual, SEEK_SET);
+
+        if (raizReconstruida) {
+            int tamBytesTupsOut = 0;
+            // 1. Descompresión Huffman: Recuperamos los bytes de las tuplas originales
+            char* bytesTuplasRecuperados = decodificarBitsFisicos(f, raizReconstruida, tamCuerpoBits, &tamBytesTupsOut);
+            
+            // 2. Descompresión LZ77: Convertimos esos bytes a tuplas y reconstruimos el texto plano
+            TuplaLZ77* tuplasParaLZ = (TuplaLZ77*)bytesTuplasRecuperados;
+            txtFinal = descomprimirLZ77(tuplasParaLZ, numTuplasOriginales, &tS);
+            
+            free(bytesTuplasRecuperados);
+            liberarArbol(raizReconstruida);
+        }
+        fclose(f);
+    }
 
     clock_t fin = clock();
-    // --- FIN DE EVALUACIÓN ---
 
     if (txtFinal) {
         char nomOut[100];
