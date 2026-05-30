@@ -1,175 +1,426 @@
 #include "Huffman.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
-NodoHuffman* crearNuevoNodo(char c, int f) {
-    NodoHuffman* nuevo = (NodoHuffman*)malloc(sizeof(NodoHuffman));
-    if (nuevo != NULL) {
-        nuevo->caracter = c;
-        nuevo->frecuencia = f;
-        nuevo->izq = NULL;
-        nuevo->der = NULL;
-    }
-    return nuevo;
+//==================================================
+// 3. FUNCIONES BÁSICAS (NODOS)
+//Las hojas contienen caracteres
+//Los nodos internos solo suman frecuencias
+//crear Nodo con carácter y frecuencia
+//==================================================
+
+huffmanNode* createNode(char character, int frequency) {
+    huffmanNode* newNode = (huffmanNode*)malloc(sizeof(huffmanNode));
+
+    newNode->character = character;
+    newNode->frequency = frequency;
+    newNode->leftChild = NULL;
+    newNode->rightChild = NULL;
+
+    return newNode;
 }
 
-void construirArbolHuffman(int frecuencias[256]) {
-    printf("\n========================================\n");
-    printf("    FASE HUFFMAN: ANALISIS DE PESOS      \n");
-    printf("========================================\n");
-    printf("%-10s | %-10s\n", "CARACTER", "FRECUENCIA");
-    printf("-----------|-----------\n");
+//==================================================
+// 4. FUNCIONES DEL HEAP
+//==================================================
 
-    int caracteresDistintos = 0;
-    for (int i = 0; i < 256; i++) {
-        if (frecuencias[i] > 0) {
-            caracteresDistintos++;
-            if (i == '\n') printf("%-10s | %-10d\n", "'\\n'", frecuencias[i]);
-            else if (i == ' ') printf("%-10s | %-10d\n", "'ESP'", frecuencias[i]);
-            else if (i == '\t') printf("%-10s | %-10d\n", "'\\t'", frecuencias[i]);
-            else printf("'%c'        | %-10d\n", (char)i, frecuencias[i]);
-        }
-    }
-    printf("----------------------------------------\n");
-    printf("Total de simbolos unicos: %d\n", caracteresDistintos);
-    printf("----------------------------------------\n");
+// Intercambia dos nodos dentro del heap
+void swapNodes(huffmanNode** a, huffmanNode** b) {
+    huffmanNode* temp = *a;
+    *a = *b;
+    *b = temp;
 }
 
-// 1. CONSTRUCCIÓN DEL ÁRBOL EN RAM
-NodoHuffman* generarArbolReal(int frecuencias[256]) {
-    NodoHuffman* lista[256];
-    int n = 0;
+//Heapify (mantener orden del heap)
+// Mantiene la propiedad de minHeap desde un índice dado
+void heapify(minHeap* heap, int index) {
+    int smallest = index;
+    int left = 2 * index + 1;
+    int right = 2 * index + 2;
 
-    // Crear un nodo hoja por cada carácter que exista en el archivo
-    for (int i = 0; i < 256; i++) {
-        if (frecuencias[i] > 0) {
-            lista[n++] = crearNuevoNodo((char)i, frecuencias[i]);
-        }
+    // Verificar si hijo izquierdo es menor
+    if (left < heap->size &&
+        heap->nodes[left]->frequency < heap->nodes[smallest]->frequency) {
+        smallest = left;
     }
 
-    if (n == 0) return NULL;
-    if (n == 1) {
-        NodoHuffman* padre = crearNuevoNodo('\0', lista[0]->frecuencia);
-        padre->izq = lista[0];
-        return padre;
+    // Verificar si hijo derecho es menor
+    if (right < heap->size &&
+        heap->nodes[right]->frequency < heap->nodes[smallest]->frequency) {
+        smallest = right;
     }
 
-    // Bucle de fusión: Combinar los dos nodos con menores frecuencias
-    while (n > 1) {
-        // Ordenar la lista por frecuencia de mayor a menor (los menores quedan al final)
-        for (int i = 0; i < n - 1; i++) {
-            for (int j = i + 1; j < n; j++) {
-                if (lista[i]->frecuencia < lista[j]->frecuencia) {
-                    NodoHuffman* temp = lista[i];
-                    lista[i] = lista[j];
-                    lista[j] = temp;
-                }
-            }
-        }
-
-        // Extraer los dos más pequeños
-        NodoHuffman* primero = lista[n - 1];
-        NodoHuffman* segundo = lista[n - 2];
-
-        // Crear el nodo padre
-        NodoHuffman* padre = crearNuevoNodo('\0', primero->frecuencia + segundo->frecuencia);
-        padre->izq = primero;
-        padre->der = segundo;
-
-        // Reemplazar en la lista de trabajo
-        lista[n - 2] = padre;
-        n--;
-    }
-    return lista[0]; // La raíz del árbol de Huffman
-}
-
-// 2. RECORRIDO DEL ÁRBOL PARA ASIGNAR CÓDIGOS BINARIOS ('0' y '1')
-void generarCodigos(NodoHuffman* raiz, char codigos[256][100], char* codigoActual, int top) {
-    if (raiz->izq) {
-        codigoActual[top] = '0';
-        generarCodigos(raiz->izq, codigos, codigoActual, top + 1);
-    }
-    if (raiz->der) {
-        codigoActual[top] = '1';
-        generarCodigos(raiz->der, codigos, codigoActual, top + 1);
-    }
-    // Si es un nodo hoja, guardamos el código obtenido
-    if (!raiz->izq && !raiz->der) {
-        codigoActual[top] = '\0';
-        strcpy(codigos[(unsigned char)raiz->caracter], codigoActual);
+    // Si encontramos un nodo más pequeño, intercambiamos
+    if (smallest != index) {
+        swapNodes(&heap->nodes[smallest], &heap->nodes[index]);
+        heapify(heap, smallest);
     }
 }
 
-// 3. BIT-PACKING: COMPACTAR CARACTERES EN BITS REALES PARA EL DISCO DURO
-void escribirBitsFisicos(char* texto, long tam, char codigos[256][100], FILE* f) {
-    unsigned char bitBuffer = 0;
-    int bitsCargados = 0;
+// Extrae el nodo con menor frecuencia
+huffmanNode* extractMin(minHeap* heap) {
+    huffmanNode* minNode = heap->nodes[0];
 
-    for (long i = 0; i < tam; i++) {
-        char* codigo = codigos[(unsigned char)texto[i]];
-        for (int j = 0; codigo[j] != '\0'; j++) {
-            bitBuffer <<= 1; // Desplazar bits a la izquierda
-            if (codigo[j] == '1') {
-                bitBuffer |= 1; // Encender el bit con una operación OR
-            }
-            bitsCargados++;
+    // Reemplazamos raíz con el último nodo
+    heap->nodes[0] = heap->nodes[heap->size - 1];
+    heap->size--;
 
-            // Si completamos 8 bits, tenemos 1 byte real -> Escribir al archivo
-            if (bitsCargados == 8) {
-                fwrite(&bitBuffer, 1, 1, f);
-                bitBuffer = 0;
-                bitsCargados = 0;
-            }
+    // Restauramos el heap
+    heapify(heap, 0);
+
+    return minNode;
+}
+
+// Inserta un nodo en el heap manteniendo el orden
+void insertHeap(minHeap* heap, huffmanNode* node) {
+    int i = heap->size;
+    heap->size++;
+
+    // Subimos el nodo mientras sea menor que su padre
+    while (i > 0 &&
+           node->frequency < heap->nodes[(i - 1) / 2]->frequency) {
+        heap->nodes[i] = heap->nodes[(i - 1) / 2];
+        i = (i - 1) / 2;
+    }
+
+    heap->nodes[i] = node;
+}
+
+// Construye el heap inicial (desde frecuencias) con todos los caracteres
+minHeap* createMinHeap(int frequencies[]) {
+    minHeap* heap = (minHeap*)malloc(sizeof(minHeap));
+    heap->size = 0;
+
+    // Crear nodos para cada carácter con frecuencia > 0
+    for (int i = 0; i < maxCharacters; i++) {
+        if (frequencies[i] > 0) {
+            heap->nodes[heap->size++] = createNode((char)i, frequencies[i]);
         }
     }
 
-    // Rellenar con ceros si el último byte no se completó completamente
-    if (bitsCargados > 0) {
-        bitBuffer <<= (8 - bitsCargados);
-        fwrite(&bitBuffer, 1, 1, f);
+    // Convertir arreglo en heap válido
+    for (int i = (heap->size - 1) / 2; i >= 0; i--) {
+        heapify(heap, i);
+    }
+
+    return heap;
+}
+
+
+//==================================================
+// 5. ÁRBOL DE HUFFMAN
+// Construye el árbol de Huffman combinando nodos de menor frecuencia
+//==================================================
+
+huffmanNode* buildHuffmanTree(int frequencies[]) {
+    minHeap* heap = createMinHeap(frequencies);
+
+    // Mientras haya más de un nodo
+    while (heap->size > 1) {
+        // Sacamos los dos más pequeños
+        huffmanNode* leftNode = extractMin(heap);
+        huffmanNode* rightNode = extractMin(heap);
+
+        // Creamos nodo padre (sin carácter)
+        huffmanNode* parentNode = createNode('\0',
+            leftNode->frequency + rightNode->frequency);
+
+        parentNode->leftChild = leftNode;
+        parentNode->rightChild = rightNode;
+
+        // Insertamos de nuevo en el heap
+        insertHeap(heap, parentNode);
+    }
+
+    // El último nodo es la raíz
+    return extractMin(heap);
+}
+
+//==================================================
+// 6. GENERACIÓN DE CÓDIGOS
+// Genera los códigos binarios recorriendo el árbol
+//==================================================
+
+void generateCodes(huffmanNode* root, char* currentCode, int depth, char* codes[]) {
+    if (root == NULL) return;
+
+    // Si es hoja → guardar código
+    if (root->leftChild == NULL && root->rightChild == NULL) {
+        currentCode[depth] = '\0';
+        codes[(unsigned char)root->character] = strdup(currentCode);
+        return;
+    }
+
+    // Ir a la izquierda (agregar '0')
+    currentCode[depth] = '0';
+    generateCodes(root->leftChild, currentCode, depth + 1, codes);
+
+    // Ir a la derecha (agregar '1')
+    currentCode[depth] = '1';
+    generateCodes(root->rightChild, currentCode, depth + 1, codes);
+}
+
+//==================================================
+// 7. ENTRADA (FRECUENCIAS)
+//Tabla de frecuencias
+// Cuenta cuántas veces aparece cada carácter
+//==================================================
+
+void buildFrequencyTable(const char* text, int frequencies[]) {
+    for (int i = 0; i < maxCharacters; i++) {
+        frequencies[i] = 0;
+    }
+
+    for (int i = 0; text[i] != '\0'; i++) {
+        frequencies[(unsigned char)text[i]]++;
     }
 }
 
-// 4. DECODIFICACIÓN Y LECTURA BIT A BIT DESDE EL DISCO
-char* decodificarBitsFisicos(FILE* f, NodoHuffman* raiz, long tamCuerpo, int* tamSalida) {
-    long capDest = 1000;
-    int lenDest = 0;
-    char* destino = malloc(capDest);
+
+//==============NUEVO Refactorización====================================
+// TABLA DE FRECUENCIAS BINARIA
+// Cuenta cuántas veces aparece cada byte (0-255)
+// en un bloque de datos binarios.
+//==================================================
+
+void buildFrequencyTableBinary(
+    const unsigned char* data, // arreglo de bytes del archivo
+    long dataSize,             // cantidad total de bytes
+    int frequencies[]          // tabla de frecuencias
+) {
     
-    NodoHuffman* actual = raiz;
-    unsigned char byteLeido;
-    long bytesProcesados = 0;
+    // Inicializar todas las frecuencias en 0
+    for (int i = 0; i < maxCharacters; i++) {
+        frequencies[i] = 0;
+    }
 
-    // Leer el archivo byte por byte
-    while (bytesProcesados < tamCuerpo && fread(&byteLeido, 1, 1, f) == 1) {
-        bytesProcesados++;
-        // Extraer los 8 bits individuales de este byte
-        for (int i = 7; i >= 0; i--) {
-            int bit = (byteLeido >> i) & 1;
+    // Recorrer todos los bytes del archivo
+    for (long i = 0; i < dataSize; i++) {
 
-            if (bit == 0) actual = actual->izq;
-            else actual = actual->der;
+        // Aumentar frecuencia del byte actual
+        // data[i] puede tener valores entre 0 y 255
+        frequencies[data[i]]++;
+    }
+}
 
-            // Si es un nodo hoja, encontramos un carácter original
-            if (!actual->izq && !actual->der) {
-                if (lenDest >= capDest - 1) {
-                    capDest *= 2;
-                    destino = realloc(destino, capDest);
-                }
-                destino[lenDest++] = actual->caracter;
-                actual = raiz; // Regresar a la raíz para el siguiente carácter
+//==================================================
+// 8. COMPRESIÓN
+// Escribe un archivo binario con los códigos Huffman
+//==================================================
+
+void encodeToBinaryFile(FILE* outputFile, const char* inputText, char* codes[]) {
+
+    unsigned char buffer = 0;
+    int bitCount = 0;
+
+    for (int i = 0; inputText[i] != '\0'; i++) {
+        char* code = codes[(unsigned char)inputText[i]];
+
+        for (int j = 0; code[j] != '\0'; j++) {
+            buffer <<= 1;
+
+            if (code[j] == '1') {
+                buffer |= 1;
+            }
+
+            bitCount++;
+
+            if (bitCount == 8) {
+                fwrite(&buffer, sizeof(unsigned char), 1, outputFile);
+                buffer = 0;
+                bitCount = 0;
             }
         }
     }
-    destino[lenDest] = '\0';
-    *tamSalida = lenDest;
-    return destino;
+
+    if (bitCount > 0) {
+        buffer <<= (8 - bitCount);
+        fwrite(&buffer, sizeof(unsigned char), 1, outputFile);
+    }
+
 }
 
-void liberarArbol(NodoHuffman* raiz) {
-    if (!raiz) return;
-    liberarArbol(raiz->izq);
-    liberarArbol(raiz->der);
-    free(raiz);
+//SEGMENTO NUEVO//
+//OJO OJO OJO 
+// Implementación de encodeToBinaryFileRaw (Usa dataSize en vez de buscar '\0')
+void encodeToBinaryFileRaw(FILE* outputFile, const unsigned char* inputData, long dataSize, char* codes[]) {
+    unsigned char buffer = 0;
+    int bitCount = 0;
+
+    for (long i = 0; i < dataSize; i++) {
+        char* code = codes[inputData[i]];
+
+        for (int j = 0; code[j] != '\0'; j++) {
+            buffer <<= 1;
+            if (code[j] == '1') {
+                buffer |= 1;
+            }
+            bitCount++;
+
+            if (bitCount == 8) {
+                fwrite(&buffer, sizeof(unsigned char), 1, outputFile);
+                buffer = 0;
+                bitCount = 0;
+            }
+        }
+    }
+
+    if (bitCount > 0) {
+        buffer <<= (8 - bitCount);
+        fwrite(&buffer, sizeof(unsigned char), 1, outputFile);
+    }
+}
+
+void saveTree(huffmanNode* root, FILE* file) {
+    if (root == NULL) return;
+
+    if (root->leftChild == NULL && root->rightChild == NULL) {
+        fputc('1', file);
+        fputc(root->character, file);
+    } else {
+        fputc('0', file);
+        saveTree(root->leftChild, file);
+        saveTree(root->rightChild, file);
+    }
+}
+
+void saveCompressedFile(FILE* file, const char* inputText, char* codes[], huffmanNode* root) {
+    if (!file) {
+        printf("Error al crear archivo\n");
+        return;
+    }
+    int textLength = strlen(inputText);
+    long dataSizeCast = (long)textLength;
+    fwrite(&dataSizeCast, sizeof(long), 1, file);
+    saveTree(root, file);
+    encodeToBinaryFile(file, inputText, codes);
+}
+
+// Implementación de saveCompressedFileBinary
+void saveCompressedFileBinary(FILE* file, const unsigned char* inputData, long dataSize, char* codes[], huffmanNode* root) {
+    if (!file) {
+        printf("Error al crear archivo\n");
+        return;
+    }
+    // Guardamos la longitud real (long) del bloque entrante
+    fwrite(&dataSize, sizeof(long), 1, file);
+    saveTree(root, file);
+    encodeToBinaryFileRaw(file, inputData, dataSize, codes);
+}
+
+//==================================================
+// 9. DESCOMPRESIÓN
+//==================================================
+
+// Función: loadTree
+huffmanNode* loadTree(FILE* file) {
+
+    char flag = fgetc(file);
+
+    if (flag == '1') {
+        char character = fgetc(file);
+        return createNode(character, 0);
+    }
+
+    huffmanNode* node = createNode('\0', 0);
+    node->leftChild = loadTree(file);
+    node->rightChild = loadTree(file);
+    return node;
+}
+
+// Función: decodeFile
+void decodeFile(const char* inputFileName) {
+    FILE* file = fopen(inputFileName, "rb");
+    if (!file) {
+        printf("Error al abrir archivo\n");
+        return;
+    }
+
+    long originalLength;
+    fread(&originalLength, sizeof(long), 1, file);
+
+    huffmanNode* root = loadTree(file);
+    huffmanNode* currentNode = root;
+    unsigned char currentByte;
+    int decodedCharacters = 0;
+
+    while (fread(&currentByte, sizeof(unsigned char), 1, file)) {
+        for (int bitIndex = 7; bitIndex >= 0; bitIndex--) {
+            int currentBit = (currentByte >> bitIndex) & 1;
+
+            if (currentBit == 0) {
+                currentNode = currentNode->leftChild;
+            } else {
+                currentNode = currentNode->rightChild;
+            }
+
+            if (currentNode->leftChild == NULL &&
+                currentNode->rightChild == NULL) {
+
+                printf("%c", currentNode->character);
+                decodedCharacters++;
+
+                if (decodedCharacters == originalLength) {
+                    fclose(file);
+                    return;
+                }
+                currentNode = root;
+            }
+        }
+    }
+    fclose(file);
+}
+
+//==================================================
+// EXTRACTOR EN MEMORIA BINARIO
+//==================================================
+
+unsigned char* decodeFileToMemory(
+    FILE* file, 
+    long* outputLength
+) {
+    long originalLength;
+
+    // Leer la longitud original del bloque
+    if (fread(&originalLength, sizeof(long), 1, file) != 1) {
+        return NULL;
+    }
+
+    *outputLength = originalLength;
+
+    // Cargar el árbol de Huffman reconstruido
+    huffmanNode* root = loadTree(file);
+    huffmanNode* currentNode = root;
+
+    // Reservar memoria exacta para el buffer de salida
+    unsigned char* decodedData = (unsigned char*)malloc(originalLength);
+    long decodedBytes = 0;
+    unsigned char currentByte;
+
+    // Procesar los bits del archivo binario
+    while (decodedBytes < originalLength && fread(&currentByte, sizeof(unsigned char), 1, file)) {
+
+        for (int bitIndex = 7; bitIndex >= 0; bitIndex--) {
+
+            int currentBit = (currentByte >> bitIndex) & 1;
+
+            if (currentBit == 0) {
+                currentNode = currentNode->leftChild;
+            } else {
+                currentNode = currentNode->rightChild;
+            }
+
+            // Si llegamos a una hoja, recuperamos el byte
+            if (currentNode->leftChild == NULL && currentNode->rightChild == NULL) {
+
+                decodedData[decodedBytes++] = (unsigned char)currentNode->character;
+
+                if (decodedBytes == originalLength) {
+                    break;
+                }
+
+                currentNode = root;
+            }
+        }
+    }
+
+    return decodedData;
 }

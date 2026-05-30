@@ -1,10 +1,421 @@
-La estructura de datos es fundamental en la programacion. El algoritmo LZ77 busca repeticiones en el texto para comprimir la informacion de manera eficiente. Por otro lado, el algoritmo de Huffman utiliza frecuencias para asignar codigos mas cortos a los caracteres que aparecen mas seguido. Cuando combinamos LZ77 con Huffman, obtenemos un sistema de compresion potente y robusto. Este proyecto de la UTP demuestra como podemos aplicar conceptos teoricos en una implementacion practica y funcional para el manejo de archivos binarios.
-La estructura de datos es fundamental en la programacion. El algoritmo LZ77 busca repeticiones en el texto para comprimir la informacion de manera eficiente. Por otro lado, el algoritmo de Huffman utiliza frecuencias para asignar codigos mas cortos a los caracteres que aparecen mas seguido. Cuando combinamos LZ77 con Huffman, obtenemos un sistema de compresion potente y robusto. Este proyecto de la UTP demuestra como podemos aplicar conceptos teoricos en una implementacion practica y funcional para el manejo de archivos binarios.
-La estructura de datos es fundamental en la programacion. El algoritmo LZ77 busca repeticiones en el texto para comprimir la informacion de manera eficiente. Por otro lado, el algoritmo de Huffman utiliza frecuencias para asignar codigos mas cortos a los caracteres que aparecen mas seguido. Cuando combinamos LZ77 con Huffman, obtenemos un sistema de compresion potente y robusto. Este proyecto de la UTP demuestra como podemos aplicar conceptos teoricos en una implementacion practica y funcional para el manejo de archivos binarios.
-La estructura de datos es fundamental en la programacion. El algoritmo LZ77 busca repeticiones en el texto para comprimir la informacion de manera eficiente. Por otro lado, el algoritmo de Huffman utiliza frecuencias para asignar codigos mas cortos a los caracteres que aparecen mas seguido. Cuando combinamos LZ77 con Huffman, obtenemos un sistema de compresion potente y robusto. Este proyecto de la UTP demuestra como podemos aplicar conceptos teoricos en una implementacion practica y funcional para el manejo de archivos binarios.
-La estructura de datos es fundamental en la programacion. El algoritmo LZ77 busca repeticiones en el texto para comprimir la informacion de manera eficiente. Por otro lado, el algoritmo de Huffman utiliza frecuencias para asignar codigos mas cortos a los caracteres que aparecen mas seguido. Cuando combinamos LZ77 con Huffman, obtenemos un sistema de compresion potente y robusto. Este proyecto de la UTP demuestra como podemos aplicar conceptos teoricos en una implementacion practica y funcional para el manejo de archivos binarios.
-La estructura de datos es fundamental en la programacion. El algoritmo LZ77 busca repeticiones en el texto para comprimir la informacion de manera eficiente. Por otro lado, el algoritmo de Huffman utiliza frecuencias para asignar codigos mas cortos a los caracteres que aparecen mas seguido. Cuando combinamos LZ77 con Huffman, obtenemos un sistema de compresion potente y robusto. Este proyecto de la UTP demuestra como podemos aplicar conceptos teoricos en una implementacion practica y funcional para el manejo de archivos binarios.
-La estructura de datos es fundamental en la programacion. El algoritmo LZ77 busca repeticiones en el texto para comprimir la informacion de manera eficiente. Por otro lado, el algoritmo de Huffman utiliza frecuencias para asignar codigos mas cortos a los caracteres que aparecen mas seguido. Cuando combinamos LZ77 con Huffman, obtenemos un sistema de compresion potente y robusto. Este proyecto de la UTP demuestra como podemos aplicar conceptos teoricos en una implementacion practica y funcional para el manejo de archivos binarios.
-La estructura de datos es fundamental en la programacion. El algoritmo LZ77 busca repeticiones en el texto para comprimir la informacion de manera eficiente. Por otro lado, el algoritmo de Huffman utiliza frecuencias para asignar codigos mas cortos a los caracteres que aparecen mas seguido. Cuando combinamos LZ77 con Huffman, obtenemos un sistema de compresion potente y robusto. Este proyecto de la UTP demuestra como podemos aplicar conceptos teoricos en una implementacion practica y funcional para el manejo de archivos binarios.
-La estructura de datos es fundamental en la programacion. El algoritmo LZ77 busca repeticiones en el texto para comprimir la informacion de manera eficiente. Por otro lado, el algoritmo de Huffman utiliza frecuencias para asignar codigos mas cortos a los caracteres que aparecen mas seguido. Cuando combinamos LZ77 con Huffman, obtenemos un sistema de compresion potente y robusto. Este proyecto de la UTP demuestra como podemos aplicar conceptos teoricos en una implementacion practica y funcional para el manejo de archivos binarios.
-La estructura de datos es fundamental en la programacion. El algoritmo LZ77 busca repeticiones en el texto para comprimir la informacion de manera eficiente. Por otro lado, el algoritmo de Huffman utiliza frecuencias para asignar codigos mas cortos a los caracteres que aparecen mas seguido. Cuando combinamos LZ77 con Huffman, obtenemos un sistema de compresion potente y robusto. Este proyecto de la UTP demuestra como podemos aplicar conceptos teoricos en una implementacion practica y funcional para el manejo de archivos binarios.
+La noche en que el cielo se abrió
+En el pequeño pueblo de San Jerónimo del Valle, un lugar olvidado entre montañas y bosques, vivía un hombre llamado Mateo. Era un sujeto común. Trabajaba en una pequeña fábrica, regresaba a casa todos los días a la misma hora y tenía la costumbre de sentarse en el mismo banco del parque a observar las estrellas.
+Los habitantes del pueblo decían que Mateo era demasiado tranquilo. Algunos afirmaban que era aburrido. Otros pensaban que simplemente tenía una imaginación muy activa. Lo cierto era que Mateo sentía una fascinación inmensa por el cielo nocturno.
+Cada noche observaba las estrellas.
+Cada noche observaba la luna.
+Cada noche observaba las constelaciones.
+Y cada noche se preguntaba si estaba realmente solo en el universo.
+Aquella pregunta lo acompañó durante años.
+Una noche de otoño, cuando el viento soplaba con fuerza entre los árboles y las nubes se desplazaban lentamente sobre las montañas, Mateo decidió caminar por un sendero alejado del pueblo.
+Era un sendero antiguo.
+Era un sendero silencioso.
+Era un sendero que casi nadie utilizaba.
+Mateo caminó durante varios minutos mientras observaba el cielo. Las estrellas brillaban con una intensidad inusual.
+Entonces ocurrió algo extraño.
+Una de las estrellas comenzó a moverse.
+Al principio pensó que era un avión.
+Después pensó que era un satélite.
+Luego comprendió que no era ninguna de las dos cosas.
+La luz avanzaba en zigzag.
+La luz se detenía.
+La luz aceleraba.
+La luz desaparecía.
+La luz reaparecía.
+Mateo sintió un escalofrío.
+La luz descendió.
+La luz siguió descendiendo.
+La luz descendió aún más.
+Hasta que finalmente apareció sobre el bosque.
+Un silencio absoluto cubrió el lugar.
+No se escuchaban insectos.
+No se escuchaban aves.
+No se escuchaba el viento.
+No se escuchaba nada.
+Entonces la luz se transformó.
+Lo que parecía una estrella comenzó a revelar una forma definida.
+Era un objeto.
+Era un objeto metálico.
+Era un objeto enorme.
+Era un objeto imposible.
+El objeto flotaba sobre los árboles sin emitir sonido alguno.
+Mateo quedó paralizado.
+Su corazón latía con fuerza.
+Su respiración era acelerada.
+Sus manos temblaban.
+Sin embargo, no podía apartar la vista.
+El objeto tenía forma ovalada.
+Su superficie parecía estar hecha de un metal desconocido.
+No reflejaba la luz.
+No producía sombras.
+Era como si existiera fuera de las leyes normales de la física.
+De repente, una columna luminosa descendió desde la parte inferior del objeto.
+La columna luminosa tocó el suelo.
+La columna luminosa iluminó los árboles.
+La columna luminosa iluminó las piedras.
+La columna luminosa iluminó a Mateo.
+Y entonces ocurrió.
+Mateo comenzó a elevarse.
+Intentó moverse.
+Intentó correr.
+Intentó gritar.
+Pero no pudo hacer nada.
+La fuerza invisible lo levantó lentamente.
+Primero unos centímetros.
+Luego un metro.
+Luego varios metros.
+Finalmente desapareció dentro del objeto.
+La oscuridad lo envolvió.
+No sabía cuánto tiempo pasó.
+Tal vez segundos.
+Tal vez horas.
+Tal vez días.
+Cuando recuperó la conciencia, se encontraba en una habitación circular.
+Las paredes brillaban con una luz azul tenue.
+No había puertas.
+No había ventanas.
+No había muebles.
+Solo existía aquella extraña habitación.
+Mateo se puso de pie lentamente.
+Observó las paredes.
+Observó el suelo.
+Observó el techo.
+Todo parecía estar construido con una sola pieza de material.
+De pronto escuchó una voz.
+No provenía de ninguna dirección.
+No parecía un sonido.
+Parecía un pensamiento.
+—Bienvenido, Mateo.
+El hombre sintió un escalofrío.
+—¿Quién está ahí?
+No hubo respuesta inmediata.
+Sin embargo, una figura apareció frente a él.
+Era alta.
+Era delgada.
+Era humanoide.
+Sus ojos eran completamente negros.
+Su piel tenía un tono gris plateado.
+La figura observó a Mateo durante varios segundos.
+Luego volvió a hablar.
+—No temas.
+Mateo hizo exactamente lo contrario.
+Sintió más miedo que nunca.
+—¿Qué quieren de mí?
+La figura respondió.
+—Comprender.
+—¿Comprender qué?
+—Comprender a la humanidad.
+Mateo tragó saliva.
+La figura extendió una mano.
+En ese instante aparecieron imágenes flotando en el aire.
+Ciudades.
+Océanos.
+Bosques.
+Desiertos.
+Montañas.
+Millones de personas.
+Millones de vidas.
+Millones de historias.
+Las imágenes giraban alrededor de Mateo como si fueran recuerdos vivientes.
+—Observamos su mundo desde hace mucho tiempo —dijo la figura.
+—¿Cuánto tiempo?
+—Mucho antes de que existiera tu civilización.
+Mateo sintió que la habitación se volvía más fría.
+—¿Por qué nunca se mostraron?
+—Porque la humanidad aún no estaba preparada.
+La respuesta sonó extrañamente lógica.
+Y al mismo tiempo resultó aterradora.
+La figura condujo a Mateo por una serie de corredores iluminados.
+A medida que avanzaban, observó salas enormes.
+En una de ellas había esferas luminosas flotando.
+En otra había estructuras transparentes que cambiaban de forma constantemente.
+En otra sala vio algo aún más inquietante.
+Seres.
+Muchos seres.
+Seres de diferentes tamaños.
+Seres de diferentes formas.
+Seres de diferentes colores.
+Algunos parecían insectos gigantes.
+Otros parecían criaturas marinas.
+Otros parecían completamente incomprensibles.
+Todos observaban algo.
+Todos estudiaban algo.
+Todos trabajaban en silencio.
+Mateo comprendió que aquella nave era mucho más que una nave.
+Era una ciudad.
+Era un laboratorio.
+Era una biblioteca.
+Era una universidad.
+Era una civilización viajando entre las estrellas.
+La figura continuó guiándolo.
+Finalmente llegaron a una cámara gigantesca.
+En el centro flotaba una esfera de energía.
+La esfera pulsaba lentamente.
+La esfera emitía destellos.
+La esfera parecía viva.
+—¿Qué es eso? —preguntó Mateo.
+—Memoria.
+—¿Memoria de quién?
+—Memoria de todos.
+Mateo no entendió.
+La figura tocó la esfera.
+Instantáneamente miles de imágenes invadieron su mente.
+Vio galaxias.
+Vio planetas.
+Vio soles.
+Vio mundos cubiertos por océanos.
+Vio mundos cubiertos por hielo.
+Vio mundos cubiertos por ciudades imposibles.
+Vio especies naciendo.
+Vio especies evolucionando.
+Vio especies desapareciendo.
+Vio millones de años transcurrir en segundos.
+Era demasiado.
+Demasiada información.
+Demasiado conocimiento.
+Demasiadas imágenes.
+Mateo cayó de rodillas.
+La visión desapareció.
+La figura permaneció inmóvil.
+—Ahora entiendes una pequeña parte.
+—No —respondió Mateo—. No entiendo nada.
+Por primera vez la figura pareció mostrar algo parecido a una sonrisa.
+—Exactamente.
+Pasaron horas.
+O días.
+O tal vez semanas.
+Mateo nunca logró determinarlo.
+Aprendió sobre civilizaciones antiguas.
+Aprendió sobre tecnologías imposibles.
+Aprendió sobre mundos lejanos.
+Pero también aprendió algo inesperado.
+Los extraterrestres no eran conquistadores.
+No eran invasores.
+No eran dioses.
+Eran exploradores.
+Exploradores eternos.
+Viajeros incansables.
+Observadores del universo.
+Finalmente llegó el momento de regresar.
+La figura acompañó a Mateo hasta una plataforma circular.
+—¿Volveré a verte?
+—Probablemente no.
+—¿Por qué me eligieron?
+La respuesta tardó varios segundos.
+—Porque observabas las estrellas.
+Mateo permaneció en silencio.
+La figura continuó.
+—Millones miran hacia el suelo. Muy pocos miran hacia arriba.
+La plataforma comenzó a iluminarse.
+La habitación desapareció.
+La nave desapareció.
+La luz desapareció.
+Y Mateo despertó.
+Estaba nuevamente en el bosque.
+Era de noche.
+Las estrellas seguían allí.
+La luna seguía allí.
+Las montañas seguían allí.
+Todo parecía normal.
+Sin embargo, algo era diferente.
+Mateo observó su reloj.
+Habían transcurrido apenas tres minutos.
+Tres minutos.
+Solo tres minutos.
+Pero en su memoria existían semanas de experiencias.
+Semanas de conversaciones.
+Semanas de conocimiento.
+Semanas de recuerdos.
+Regresó al pueblo.
+Nadie le creyó.
+Nadie creyó su historia.
+Nadie creyó que una nave descendió del cielo.
+Nadie creyó que había visto otros mundos.
+Nadie creyó que había viajado entre las estrellas.
+Y con el tiempo dejó de contarlo.
+Sin embargo, cada noche seguía observando el cielo.
+Cada noche observaba las estrellas.
+Cada noche observaba la luna.
+Cada noche observaba las constelaciones.
+Y cada noche recordaba aquella voz.
+Porque ahora conocía una verdad.
+Una verdad inmensa.
+Una verdad aterradora.
+Una verdad maravillosa.
+El universo estaba lleno de vida.
+Y en algún lugar, muy lejos de la Tierra, una gigantesca nave seguía viajando entre las estrellas.
+Observando.
+Aprendiendo.
+Recordando.
+Esperando.
+Porque quizás algún día, cuando la humanidad estuviera preparada, el cielo volvería a abrirse.Seres.
+Muchos seres.
+Seres de diferentes tamaños.
+Seres de diferentes formas.
+Seres de diferentes colores.
+Algunos parecían insectos gigantes.
+Otros parecían criaturas marinas.
+Otros parecían completamente incomprensibles.
+Todos observaban algo.
+Todos estudiaban algo.
+Todos trabajaban en silencio.
+Mateo comprendió que aquella nave era mucho más que una nave.
+Era una ciudad.
+Era un laboratorio.
+Era una biblioteca.
+Era una universidad.
+Era una civilización viajando entre las estrellas.
+La figura continuó guiándolo.
+Finalmente llegaron a una cámara gigantesca.
+En el centro flotaba una esfera de energía.
+La esfera pulsaba lentamente.
+La esfera emitía destellos.
+La esfera parecía viva.
+—¿Qué es eso? —preguntó Mateo.
+—Memoria.
+—¿Memoria de quién?
+—Memoria de todos.
+Mateo no entendió.
+La figura tocó la esfera.
+Instantáneamente miles de imágenes invadieron su mente.
+Vio galaxias.
+Vio planetas.
+Vio soles.
+Vio mundos cubiertos por océanos.
+Vio mundos cubiertos por hielo.
+Vio mundos cubiertos por ciudades imposibles.
+Vio especies naciendo.
+Vio especies evolucionando.
+Vio especies desapareciendo.
+Vio millones de años transcurrir en segundos.
+Era demasiado.
+Demasiada información.
+Demasiado conocimiento.
+Demasiadas imágenes.
+Mateo cayó de rodillas.
+La visión desapareció.
+La figura permaneció inmóvil.
+—Ahora entiendes una pequeña parte.
+—No —respondió Mateo—. No entiendo nada.
+Por primera vez la figura pareció mostrar algo parecido a una sonrisa.
+—Exactamente.
+Pasaron horas.
+O días.
+O tal vez semanas.
+Mateo nunca logró determinarlo.
+Aprendió sobre civilizaciones antiguas.
+Aprendió sobre tecnologías imposibles.
+Aprendió sobre mundos lejanos.
+Pero también aprendió algo inesperado.
+Los extraterrestres no eran conquistadores.
+No eran invasores.
+No eran dioses.
+Eran exploradores.
+Exploradores eternos.
+Viajeros incansables.
+Observadores del universo.
+Finalmente llegó el momento de regresar.
+La figura acompañó a Mateo hasta una plataforma circular.
+—¿Volveré a verte?
+—Probablemente no.
+—¿Por qué me eligieron?
+La respuesta tardó varios segundos.
+—Porque observabas las estrellas.
+Mateo permaneció en silencio.
+La figura continuó.
+—Millones miran hacia el suelo. Muy pocos miran hacia arriba.
+La plataforma comenzó a iluminarse.
+La habitación desapareció.
+La nave desapareció.
+La luz desapareció.
+Y Mateo despertó.
+Estaba nuevamente en el bosque.
+Era de noche.
+Las estrellas seguían allí.
+La luna seguía allí.
+Las montañas seguían allí.
+Todo parecía normal.
+Sin embargo, algo era diferente.
+Mateo observó su reloj.
+Habían transcurrido apenas tres minutos.
+Tres minutos.
+Solo tres minutos.
+Pero en su memoria existían semanas de experiencias.
+Semanas de conversaciones.
+Semanas de conocimiento.
+Semanas de recuerdos.
+Regresó al pueblo.
+Nadie le creyó.
+Nadie creyó su historia.
+Nadie creyó que una nave descendió del cielo.
+Nadie creyó que había visto otros mundos.
+Nadie creyó que había viajado entre las estrellas.
+Y con el tiempo dejó de contarlo.
+Sin embargo, cada noche seguía observando el cielo.
+Cada noche observaba las estrellas.
+Cada noche observaba la luna.
+Cada noche observaba las constelaciones.
+Y cada noche recordaba aquella voz.
+Porque ahora conocía una verdad.
+Una verdad inmensa.
+Una verdad aterradora.
+Una verdad maravillosa.
+El universo estaba lleno de vida.
+Y en algún lugar, muy lejos de la Tierra, una gigantesca nave seguía viajando entre las estrellas.
+Observando.
+Aprendiendo.
+Recordando.
+Esperando.
+Porque quizás algún día, cuando la humanidad estuviera preparada, el cielo volvería a abrirse.Pero en su memoria existían semanas de experiencias.
+Semanas de conversaciones.
+Semanas de conocimiento.
+Semanas de recuerdos.
+Regresó al pueblo.
+Nadie le creyó.
+Nadie creyó su historia.
+Nadie creyó que una nave descendió del cielo.
+Nadie creyó que había visto otros mundos.
+Nadie creyó que había viajado entre las estrellas.
+Y con el tiempo dejó de contarlo.
+Sin embargo, cada noche seguía observando el cielo.
+Cada noche observaba las estrellas.
+Cada noche observaba la luna.
+Cada noche observaba las constelaciones.
+Y cada noche recordaba aquella voz.
+Porque ahora conocía una verdad.
+Una verdad inmensa.
+Una verdad aterradora.
+Una verdad maravillosa.
+El universo estaba lleno de vida.
+Y en algún lugar, muy lejos de la Tierra, una gigantesca nave seguía viajando entre las estrellas.
+Observando.
+Aprendiendo.
+Recordando.
+Esperando.
+Porque quizás algún día, cuando la humanidad estuviera preparada, el cielo volvería a abrirse.Sin embargo, cada noche seguía observando el cielo.
+Cada noche observaba las estrellas.
+Cada noche observaba la luna.
+Cada noche observaba las constelaciones.
+Y cada noche recordaba aquella voz.
+Porque ahora conocía una verdad.
+Una verdad inmensa.
+Una verdad aterradora.
+Una verdad maravillosa.
+El universo estaba lleno de vida.
+Y en algún lugar, muy lejos de la Tierra, una gigantesca nave seguía viajando entre las estrellas.
+Observando.
+Aprendiendo.
+Recordando.
+Esperando.
+Porque quizás algún día, cuando la humanidad estuviera preparada, el cielo volvería a abrirse.Cada noche observaba las constelaciones.
+Y cada noche recordaba aquella voz.
+Porque ahora conocía una verdad.
+Una verdad inmensa.
+Una verdad aterradora.
+Una verdad maravillosa.
+El universo estaba lleno de vida.
+Y en algún lugar, muy lejos de la Tierra, una gigantesca nave seguía viajando entre las estrellas.
+Observando.
+Aprendiendo.
+Recordando.
+Esperando.
+Porque quizás algún día, cuando la humanidad estuviera preparada, el cielo volvería a abrirse.

@@ -2,34 +2,131 @@
 #define HUFFMAN_H
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-typedef struct NodoHuffman {
-    char caracter;
-    int frecuencia;
-    struct NodoHuffman *izq, *der;
-} NodoHuffman;
+//==================================================
+// CONSTANTES
+//==================================================
 
-// Crea un nodo individual en RAM
-NodoHuffman* crearNuevoNodo(char c, int f);
+#define maxCharacters 256
+#define maxCodeLength 100
 
-// Muestra la tabla visual requerida por el proyecto
-void construirArbolHuffman(int frecuencias[256]);
+//==================================================
+// ESTRUCTURA NODO HUFFMAN
+//==================================================
 
-// --- FUNCIONES REALES DEL ALGORITMO ---
+typedef struct huffmanNode {
+    char character;
+    int frequency;
+    struct huffmanNode* leftChild;
+    struct huffmanNode* rightChild;
+} huffmanNode;
 
-// Construye el árbol real combinando los nodos y devuelve la raíz
-NodoHuffman* generarArbolReal(int frecuencias[256]);
+//==================================================
+// ESTRUCTURA MIN HEAP
+//==================================================
 
-// Recorre el árbol para asignar las cadenas de '0' y '1' a cada carácter
-void generarCodigos(NodoHuffman* raiz, char codigos[256][100], char* codigoActual, int top);
+typedef struct minHeap {
+    int size;
+    huffmanNode* nodes[maxCharacters];
+} minHeap;
 
-// Toma las cadenas de '0' y '1' y las empaqueta en bytes reales (Bit-Packing) en el archivo
-void escribirBitsFisicos(char* texto, long tam, char codigos[256][100], FILE* f);
+//==================================================
+// FUNCIONES BÁSICAS
+//==================================================
 
-// Lee los bytes del disco, extrae sus bits y camina por el árbol para recuperar el texto
-char* decodificarBitsFisicos(FILE* f, NodoHuffman* raiz, long tamCuerpo, int* tamSalida);
+huffmanNode* createNode(char character, int frequency);
 
-// Libera la memoria RAM del árbol binario al terminar
-void liberarArbol(NodoHuffman* raiz);
+//==================================================
+// FUNCIONES DEL HEAP
+//==================================================
+
+void swapNodes(huffmanNode** a, huffmanNode** b);
+void heapify(minHeap* heap, int index);
+huffmanNode* extractMin(minHeap* heap);
+void insertHeap(minHeap* heap, huffmanNode* node);
+minHeap* createMinHeap(int frequencies[]);
+
+//==================================================
+// ÁRBOL DE HUFFMAN
+//==================================================
+
+huffmanNode* buildHuffmanTree(int frequencies[]);
+
+//==================================================
+// GENERACIÓN DE CÓDIGOS
+//==================================================
+
+void generateCodes(
+    huffmanNode* root,
+    char* currentCode,
+    int depth,
+    char* codes[]
+);
+
+//==================================================
+// TABLA DE FRECUENCIAS
+//==================================================
+
+void buildFrequencyTable(
+    const char* text,
+    int frequencies[]
+);
+
+void buildFrequencyTableBinary(
+    const unsigned char* data,
+    long dataSize,
+    int frequencies[]
+);
+
+//==================================================
+// COMPRESIÓN
+//==================================================
+
+void encodeToBinaryFile(
+    FILE* outputFile,
+    const char* inputText,
+    char* codes[]
+);
+
+// NUEVA: Para codificar buffers binarios crudos (LZ77) sin depender de '\0'
+void encodeToBinaryFileRaw(
+    FILE* outputFile,
+    const unsigned char* inputData,
+    long dataSize,
+    char* codes[]
+);
+
+void saveTree(
+    huffmanNode* root,
+    FILE* file
+);
+
+void saveCompressedFile(
+    FILE* file,
+    const char* inputText,
+    char* codes[],
+    huffmanNode* root
+);
+
+// NUEVA: Para guardar archivos comprimidos usando el tamaño binario exacto
+void saveCompressedFileBinary(
+    FILE* file,
+    const unsigned char* inputData,
+    long dataSize,
+    char* codes[],
+    huffmanNode* root
+);
+
+//==================================================
+// DESCOMPRESIÓN
+//==================================================
+
+huffmanNode* loadTree(FILE* file);
+void decodeFile(const char* inputFileName);
+
+// NUEVA: Extrae los bytes directamente a un arreglo en memoria (para simetría total)
+unsigned char* decodeFileToMemory(FILE* file, long* outputLength);
 
 #endif
